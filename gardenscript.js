@@ -431,17 +431,41 @@ function checkBulletCollision(bullet, laneConfig) {
   }
   return false;
 }
-function findFirstPlantInLane(laneConfig) {
-  for (const slot of laneConfig.slots) {
-    if (slot) return slot;
+function findNearestPlantInFront(zombie, laneConfig) {
+  let best = null;
+  let bestX = -Infinity;
+
+  const zx = zombie.offsetLeft;
+
+  for (const plant of laneConfig.slots) {
+    if (!plant) continue;
+
+    if (plant.offsetLeft > zx + 4) continue;
+
+    if (plant.offsetLeft > bestX) {
+      bestX = plant.offsetLeft;
+      best = plant;
+    }
   }
-  return null;
+
+  return best;
 }
+
 const ZOMBIE_EAT_DURATION = 3000;
 function updateZombies(delta, timestamp) {
   const deltaPixels = (ZOMBIE_SPEED * delta) / 1000;
+  const EAT_GAP = 4;
+
   for (const laneConfig of platformLanes) {
     for (const zombie of [...laneConfig.zombies]) {
+
+      // If the plant was removed while zombie was eating, continue walking
+      if (zombie.eatingPlant && !document.body.contains(zombie.eatingPlant)) {
+        delete zombie.eatingPlant;
+        delete zombie.eatingUntil;
+      }
+
+      // Eating mode
       if (zombie.eatingPlant) {
         if (timestamp >= zombie.eatingUntil) {
           removeObject(zombie.eatingPlant);
@@ -450,25 +474,34 @@ function updateZombies(delta, timestamp) {
         }
         continue;
       }
-      const targetPlant = findFirstPlantInLane(laneConfig);
+
+      // ✅ Find nearest plant in front (rightmost)
+      const targetPlant = findNearestPlantInFront(zombie, laneConfig);
+
       if (targetPlant) {
-        const zombieRect = zombie.getBoundingClientRect();
-        const plantRect = targetPlant.getBoundingClientRect();
-        if (zombieRect.left <= plantRect.right + 4) {
+        const stopX = targetPlant.offsetLeft + targetPlant.offsetWidth + EAT_GAP;
+        const nextLeft = zombie.offsetLeft - deltaPixels;
+
+        // ✅ Clamp so it can’t “skip past” a plant in one frame
+        if (nextLeft <= stopX) {
+          zombie.style.left = `${stopX}px`;
           zombie.eatingPlant = targetPlant;
           zombie.eatingUntil = timestamp + ZOMBIE_EAT_DURATION;
           continue;
         }
       }
-      const nextLeft = zombie.offsetLeft - deltaPixels;
-      zombie.style.left = `${nextLeft}px`;
 
+      // Walk
+      zombie.style.left = `${zombie.offsetLeft - deltaPixels}px`;
+
+      // Offscreen = remove
       if (zombie.offsetLeft + zombie.offsetWidth < 0) {
         removeObject(zombie);
       }
     }
   }
 }
+
 function gameLoop(timestamp) {
   const delta = timestamp - lastFrameTimestamp;
   lastFrameTimestamp = timestamp;
@@ -563,3 +596,9 @@ window.addEventListener("keydown", (e) => {
   if (e.key === "Delete" || e.key === "Backspace") removeSelected();
 });
 requestAnimationFrame(gameLoop);
+function touchMove(e) {
+  if (!selectedObject || !e.touches || e.touches.length === 0) return;
+  const gameRect = getGameAreaRect();
+  selectedObject.style.left = `${e.touches[0].clientX - gameRect.left - offsetX}px`;
+  selectedObject.style.top  = `${e.touches[0].clientY - gameRect.top - offsetY}px`;
+}
