@@ -459,13 +459,11 @@ function updateZombies(delta, timestamp) {
   for (const laneConfig of platformLanes) {
     for (const zombie of [...laneConfig.zombies]) {
 
-      // If the plant was removed while zombie was eating, continue walking
       if (zombie.eatingPlant && !document.body.contains(zombie.eatingPlant)) {
         delete zombie.eatingPlant;
         delete zombie.eatingUntil;
       }
 
-      // Eating mode
       if (zombie.eatingPlant) {
         if (timestamp >= zombie.eatingUntil) {
           removeObject(zombie.eatingPlant);
@@ -475,14 +473,12 @@ function updateZombies(delta, timestamp) {
         continue;
       }
 
-      // ✅ Find nearest plant in front (rightmost)
+ 
       const targetPlant = findNearestPlantInFront(zombie, laneConfig);
 
       if (targetPlant) {
         const stopX = targetPlant.offsetLeft + targetPlant.offsetWidth + EAT_GAP;
         const nextLeft = zombie.offsetLeft - deltaPixels;
-
-        // ✅ Clamp so it can’t “skip past” a plant in one frame
         if (nextLeft <= stopX) {
           zombie.style.left = `${stopX}px`;
           zombie.eatingPlant = targetPlant;

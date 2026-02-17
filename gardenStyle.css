@@ -9,30 +9,6 @@
   cursor: default;
 }
 
-html, body {
-  height: 100%;
-  margin: 0;
-  overscroll-behavior: none;
-}
-
-#game-area {
-  touch-action: none; /* prevents scroll while dragging inside the game */
-}
-#game-area{
-  width: 100vw;
-  max-width: 980px;
-  height: 100vh;
-  max-height: 680px;
-}
-@media (max-width: 600px){
-  .hud{ top: 10px; }
-  .hud-main{ height: 72px; padding: 10px 12px; }
-  .hud-slot{ width: 54px; height: 54px; }
-  .slot-image{ width: 46px; height: 46px; }
-  #game-area{ padding-top: 140px; }
-}
-
-
 body {
   margin: 0;
   height: 100vh;
@@ -667,4 +643,13 @@ body::after {
   0%   { transform: translateY(0); }
   50%  { transform: translateY(-3px); }
   100% { transform: translateY(0); }
+}
+
+/* Desktop spacing tweak: push lanes down into the grass area
+   (keeps the smaller padding-top on phones via the max-width:600px rule). */
+@media (min-width: 900px) and (min-height: 700px){
+  #game-area{
+    max-height: none;
+    padding-top: clamp(360px, 42vh, 520px);
+  }
 }
