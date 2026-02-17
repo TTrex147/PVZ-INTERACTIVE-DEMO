@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PvZ INTERACTIVE</title>
+  <link rel="stylesheet" href="gardenStyle.css" />
+  
+</head>
+<body>
+  <nav class="hud">
+  <div class="hud-main">
+    <div class="hud-slot peashooter-slot" title="Peashooter">
+      <img src="peashooter.png" class="slot-image" alt="Peashooter" />
+    </div>
+    <div class="hud-center"></div>
+  </div>
+  
+  <div class="hud-addon">
+    <div class="hud-slot shovel-slot" title="Shovel">
+      <img src="diashovel.png" class="slot-image" alt="Shovel" />
+    </div>
+  </div>
+</nav>
+
+<div class="controls">
+    <button id="play-button" class="game-button"><span>PLAY</span></button>
+    <button id="restart-button" class="game-button"><span>RESTART</span></button>
+  </div>
+  <div id="game-area">
+    <div class="platform-lane"></div>
+    <div class="platform-lane"></div>
+    <div class="platform-lane"></div>
+  </div>
+  <script src="gardenscript.js"></script>
+</body>
+</html>

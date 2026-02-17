@@ -1,0 +1,646 @@
+:root {
+  --obj-size: 88px;
+  --art-half: 40px;
+}
+* {
+  box-sizing: border-box;
+}
+.object.plant.locked {
+  cursor: default;
+}
+
+body {
+  margin: 0;
+  height: 100vh;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  color: #e6eef8;
+  overflow: hidden;
+  background: linear-gradient(
+    180deg,
+    #79d2ff 0%,
+    #d8f7ff 38%,
+    #7fd36a 39%,
+    #2f8f44 100%
+  );
+  position: relative;
+}
+.controls{
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  display: flex;
+  gap: 12px;
+  z-index: 2005;
+}
+.game-button { 
+  border: none;
+  position: relative;
+  width: 200px;
+  height: 73px;
+  padding: 0;
+  z-index: 2;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='868' width='2500' viewBox='0 0 726 252.17'%3E%3Cpath d='M483.92 0S481.38 24.71 466 40.11c-11.74 11.74-24.09 12.66-40.26 15.07-9.42 1.41-29.7 3.77-34.81-.79-2.37-2.11-3-21-3.22-27.62-.21-6.92-1.36-16.52-2.82-18-.75 3.06-2.49 11.53-3.09 13.61S378.49 34.3 378 36a85.13 85.13 0 0 0-30.09 0c-.46-1.67-3.17-11.48-3.77-13.56s-2.34-10.55-3.09-13.61c-1.45 1.45-2.61 11.05-2.82 18-.21 6.67-.84 25.51-3.22 27.62-5.11 4.56-25.38 2.2-34.8.79-16.16-2.47-28.51-3.39-40.21-15.13C244.57 24.71 242 0 242 0H0s69.52 22.74 97.52 68.59c16.56 27.11 14.14 58.49 9.92 74.73C170 140 221.46 140 273 158.57c69.23 24.93 83.2 76.19 90 93.6 6.77-17.41 20.75-68.67 90-93.6 51.54-18.56 103-18.59 165.56-15.25-4.21-16.24-6.63-47.62 9.93-74.73C656.43 22.74 726 0 726 0z'/%3E%3C/svg%3E") no-repeat 50% 50%;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' height='868' width='2500' viewBox='0 0 726 252.17'%3E%3Cpath d='M483.92 0S481.38 24.71 466 40.11c-11.74 11.74-24.09 12.66-40.26 15.07-9.42 1.41-29.7 3.77-34.81-.79-2.37-2.11-3-21-3.22-27.62-.21-6.92-1.36-16.52-2.82-18-.75 3.06-2.49 11.53-3.09 13.61S378.49 34.3 378 36a85.13 85.13 0 0 0-30.09 0c-.46-1.67-3.17-11.48-3.77-13.56s-2.34-10.55-3.09-13.61c-1.45 1.45-2.61 11.05-2.82 18-.21 6.67-.84 25.51-3.22 27.62-5.11 4.56-25.38 2.2-34.8.79-16.16-2.47-28.51-3.39-40.21-15.13C244.57 24.71 242 0 242 0H0s69.52 22.74 97.52 68.59c16.56 27.11 14.14 58.49 9.92 74.73C170 140 221.46 140 273 158.57c69.23 24.93 83.2 76.19 90 93.6 6.77-17.41 20.75-68.67 90-93.6 51.54-18.56 103-18.59 165.56-15.25-4.21-16.24-6.63-47.62 9.93-74.73C656.43 22.74 726 0 726 0z'/%3E%3C/svg%3E") no-repeat 50% 50%;
+  -webkit-mask-size: 100%;
+  mask-size: 100%;
+  cursor: pointer;
+  background-color: transparent;
+  transform: translateY(8px);
+}
+.game-button:after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  box-shadow: 0px 0 0 0 white;
+  transition: all 2s ease;
+}
+.game-button:hover:after {
+  box-shadow: 0px -13px 56px 12px #ffffffa6;
+}
+.game-button span {
+  position: absolute;
+  width: 100%;
+  font-size: 15px;
+  font-weight: 100;
+  left: 50%;
+  top: 39%;
+  letter-spacing: 3px;
+  text-align: center;
+  transform: translate(-50%,-50%);
+  color: black;
+  transition: all 2s ease;
+}
+.game-button:hover span { color: white; }
+.game-button:before {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 100%;
+  background-color: black;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  transition: all 1s ease;
+}
+.game-button:hover:before { width: 100%; }
+.game-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+
+  background:
+    radial-gradient(circle at 15% 18%, rgba(255,255,255,.85) 0 40px, transparent 41px),
+    radial-gradient(circle at 28% 20%, rgba(255,255,255,.65) 0 55px, transparent 56px),
+    radial-gradient(circle at 65% 16%, rgba(255,255,255,.80) 0 45px, transparent 46px),
+    radial-gradient(circle at 78% 22%, rgba(255,255,255,.60) 0 65px, transparent 66px);
+  background-repeat: repeat-x;
+  background-size: 900px 260px;
+  opacity: 0.75;
+  animation: clouds 35s linear infinite;
+}
+@keyframes clouds {
+  from { background-position: 0 0; }
+  to   { background-position: -900px 0; }
+}
+body::after {
+  content: "";
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 55vh;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    repeating-linear-gradient(
+      90deg,
+      rgba(255,255,255,0.05) 0 26px,
+      transparent 26px 52px
+    ),
+    radial-gradient(ellipse at 50% 0%, rgba(0,0,0,0.18), transparent 60%);
+  opacity: 0.6;
+}
+.hud {
+  position: fixed;
+  top: 18px;
+  left: 35%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  z-index: 1000;
+}
+.hud-main {
+  width: min(720px, calc(30vw - 140px));
+  height: 88px;
+  background: #b56d23;
+  border-radius: 18px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border: 4px solid #8e4e16;
+}
+.hud-center {
+  flex: 1;
+  height: 64px;
+  border-radius: 14px;
+  background: rgba(0, 0, 0, 0.10);
+}
+.hud-addon {
+  width: 98px;
+  height: 74px;
+  margin-left: 5px;
+  background: #b56d23;
+  border-radius: 18px;
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 4px solid #8e4e16;
+}
+.hud-slot {
+  width: 64px;
+  height: 64px;
+  background: #6a3a0f;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.12s ease, filter 0.12s ease;
+}
+.hud-slot:hover {
+  transform: translateY(2px);
+  filter: brightness(1.08);
+}
+.hud-slot:active {
+  transform: translateY(4px) scale(0.98);
+}
+.slot-image {
+  width: 54px;
+  height: 54px;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+.shovel-ghost {
+  position: fixed;
+  pointer-events: none;
+  z-index: 2000;
+  transform: translate(-50%, -50%);
+}
+.shovel-slot {
+  position: absolute;
+  right: 18px;
+  background: #5d4037;
+  border-color: #3e2723;
+}
+.slot:hover,
+.shovel-slot:hover {
+  border-color: #3b82f6;
+  transform: translateY(2px);
+}
+.slot-label {
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: #bababa;
+  margin-bottom: 4px;
+}
+.slot-icon {
+  font-size: 28px;
+}
+.slot-image {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+}
+#game-area {
+  z-index: 1; 
+  width: 100%;
+  height: 100%;
+  padding-top: 310px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  position: relative;
+}
+.platform-lane {
+  width: 86%;
+  height: clamp(92px, 8.6vw, 120px); 
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 0;
+  border-radius: 6px;
+  overflow: hidden;
+
+  border: 2px solid rgba(0,0,0,0.25);
+  box-shadow: 0 10px 18px rgba(0,0,0,0.12);
+  background: none; 
+}
+.lane-tile {
+  pointer-events: none; 
+  --g: #25c925;
+
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.08), rgba(0,0,0,0.10)),
+    var(--g);
+
+  box-shadow:
+    inset -1px 0 rgba(0,0,0,0.10),
+    inset 0 -1px rgba(0,0,0,0.10);
+}
+.bullet {
+  position: absolute;
+  pointer-events: none;
+
+  
+  transform: translate(-11px, -11px) scale(0.22);
+  transform-origin: top left;
+}
+.pixelart-to-css {
+  box-shadow:
+      40px 10px 0 0 rgba(0, 0, 0, 1),
+      50px 10px 0 0 rgba(0, 0, 0, 1),
+      60px 10px 0 0 rgba(0, 0, 0, 1),
+      70px 10px 0 0 rgba(0, 0, 0, 1),
+      30px 20px 0 0 rgba(0, 0, 0, 1),
+      40px 20px 0 0 rgba(76, 175, 80, 1),
+      50px 20px 0 0 rgba(76, 175, 80, 1),
+      60px 20px 0 0 rgba(76, 175, 80, 1),
+      70px 20px 0 0 rgba(76, 175, 80, 1),
+      80px 20px 0 0 rgba(0, 0, 0, 1),
+      20px 30px 0 0 rgba(0, 0, 0, 1),
+      30px 30px 0 0 rgba(76, 175, 80, 1),
+      40px 30px 0 0 rgba(76, 175, 80, 1),
+      50px 30px 0 0 rgba(76, 175, 80, 1),
+      60px 30px 0 0 rgba(76, 175, 80, 1),
+      70px 30px 0 0 rgba(76, 175, 80, 1),
+      80px 30px 0 0 rgba(76, 175, 80, 1),
+      90px 30px 0 0 rgba(0, 0, 0, 1),
+      10px 40px 0 0 rgba(0, 0, 0, 1),
+      20px 40px 0 0 rgba(76, 175, 80, 1),
+      30px 40px 0 0 rgba(76, 175, 80, 1),
+      40px 40px 0 0 rgba(76, 175, 80, 1),
+      50px 40px 0 0 rgba(76, 175, 80, 1),
+      60px 40px 0 0 rgba(76, 175, 80, 1),
+      70px 40px 0 0 rgba(76, 175, 80, 1),
+      80px 40px 0 0 rgba(76, 175, 80, 1),
+      90px 40px 0 0 rgba(76, 175, 80, 1),
+      100px 40px 0 0 rgba(0, 0, 0, 1),
+      10px 50px 0 0 rgba(0, 0, 0, 1),
+      20px 50px 0 0 rgba(76, 175, 80, 1),
+      30px 50px 0 0 rgba(255, 255, 255, 1),
+      40px 50px 0 0 rgba(255, 255, 255, 1),
+      50px 50px 0 0 rgba(76, 175, 80, 1),
+      60px 50px 0 0 rgba(76, 175, 80, 1),
+      70px 50px 0 0 rgba(76, 175, 80, 1),
+      80px 50px 0 0 rgba(76, 175, 80, 1),
+      90px 50px 0 0 rgba(76, 175, 80, 1),
+      100px 50px 0 0 rgba(0, 0, 0, 1),
+      10px 60px 0 0 rgba(0, 0, 0, 1),
+      20px 60px 0 0 rgba(76, 175, 80, 1),
+      30px 60px 0 0 rgba(255, 255, 255, 1),
+      40px 60px 0 0 rgba(255, 255, 255, 1),
+      50px 60px 0 0 rgba(76, 175, 80, 1),
+      60px 60px 0 0 rgba(76, 175, 80, 1),
+      70px 60px 0 0 rgba(76, 175, 80, 1),
+      80px 60px 0 0 rgba(76, 175, 80, 1),
+      90px 60px 0 0 rgba(76, 175, 80, 1),
+      100px 60px 0 0 rgba(0, 0, 0, 1),
+      10px 70px 0 0 rgba(0, 0, 0, 1),
+      20px 70px 0 0 rgba(76, 175, 80, 1),
+      30px 70px 0 0 rgba(255, 255, 255, 1),
+      40px 70px 0 0 rgba(255, 255, 255, 1),
+      50px 70px 0 0 rgba(76, 175, 80, 1),
+      60px 70px 0 0 rgba(76, 175, 80, 1),
+      70px 70px 0 0 rgba(76, 175, 80, 1),
+      80px 70px 0 0 rgba(76, 175, 80, 1),
+      90px 70px 0 0 rgba(76, 175, 80, 1),
+      100px 70px 0 0 rgba(0, 0, 0, 1),
+      20px 80px 0 0 rgba(0, 0, 0, 1),
+      30px 80px 0 0 rgba(76, 175, 80, 1),
+      40px 80px 0 0 rgba(76, 175, 80, 1),
+      50px 80px 0 0 rgba(76, 175, 80, 1),
+      60px 80px 0 0 rgba(76, 175, 80, 1),
+      70px 80px 0 0 rgba(76, 175, 80, 1),
+      80px 80px 0 0 rgba(76, 175, 80, 1),
+      90px 80px 0 0 rgba(0, 0, 0, 1),
+      30px 90px 0 0 rgba(0, 0, 0, 1),
+      40px 90px 0 0 rgba(76, 175, 80, 1),
+      50px 90px 0 0 rgba(76, 175, 80, 1),
+      60px 90px 0 0 rgba(76, 175, 80, 1),
+      70px 90px 0 0 rgba(76, 175, 80, 1),
+      80px 90px 0 0 rgba(0, 0, 0, 1),
+      40px 100px 0 0 rgba(0, 0, 0, 1),
+      50px 100px 0 0 rgba(0, 0, 0, 1),
+      60px 100px 0 0 rgba(0, 0, 0, 1),
+      70px 100px 0 0 rgba(0, 0, 0, 1);
+  height: 10px;
+  width: 10px;
+  background: transparent;
+}
+.platform-lane .lane-tile:nth-child(odd)  { --g: #2fe12f; }
+.platform-lane .lane-tile:nth-child(even) { --g: #24b924; }
+.platform-lane:nth-child(2) .lane-tile:nth-child(odd)  { --g: #24b924; }
+.platform-lane:nth-child(2) .lane-tile:nth-child(even) { --g: #2fe12f; }
+.platform-lane:nth-child(3) .lane-tile:nth-child(odd)  { --g: #2acd2a; }
+.platform-lane:nth-child(3) .lane-tile:nth-child(even) { --g: #23ad23; }
+.object {
+  width: var(--obj-size);
+  height: var(--obj-size);
+  position: absolute;
+  cursor: grab;
+  user-select: none;
+  touch-action: none;
+  z-index: 10;
+}
+.object.selected {
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.4);
+  border-radius: 8px;
+  z-index: 999;
+}
+.sprite {
+  width: 2px;
+  height: 2px;
+  position: absolute;
+  left: calc(50% - var(--art-half));
+  top: calc(50% - var(--art-half));
+  transform-origin: top left;
+  transform: scale(4);
+  image-rendering: pixelated;
+  animation: idle 1.5s ease-in-out infinite alternate;
+}
+@keyframes idle {
+  from {
+    transform: scale(4) translateY(0);
+  }
+  to {
+    transform: scale(4) translateY(-4px);
+  }
+}
+.object.plant .sprite {
+  box-shadow:
+    7px 1px 0 0 rgba(0,0,0,1),
+    8px 1px 0 0 rgba(0,0,0,1),
+    9px 1px 0 0 rgba(0,0,0,1),
+    10px 1px 0 0 rgba(0,0,0,1),
+    11px 1px 0 0 rgba(0,0,0,1),
+    3px 2px 0 0 rgba(0,0,0,1),
+    4px 2px 0 0 rgba(0,0,0,1),
+    6px 2px 0 0 rgba(0,0,0,1),
+    7px 2px 0 0 rgba(33,233,42,1),
+    8px 2px 0 0 rgba(33,233,42,1),
+    9px 2px 0 0 rgba(33,233,42,1),
+    10px 2px 0 0 rgba(33,233,42,1),
+    11px 2px 0 0 rgba(33,233,42,1),
+    12px 2px 0 0 rgba(0,0,0,1),
+    16px 2px 0 0 rgba(0,0,0,1),
+    17px 2px 0 0 rgba(0,0,0,1),
+    2px 3px 0 0 rgba(0,0,0,1),
+    3px 3px 0 0 rgba(33,233,42,1),
+    4px 3px 0 0 rgba(73,138,76,1),
+    5px 3px 0 0 rgba(0,0,0,1),
+    6px 3px 0 0 rgba(33,233,42,1),
+    9px 3px 0 0 rgba(33,233,42,1),
+    10px 3px 0 0 rgba(33,233,42,1),
+    11px 3px 0 0 rgba(33,233,42,1),
+    12px 3px 0 0 rgba(33,233,42,1),
+    13px 3px 0 0 rgba(0,0,0,1),
+    15px 3px 0 0 rgba(0,0,0,1),
+    16px 3px 0 0 rgba(33,233,42,1),
+    17px 3px 0 0 rgba(33,233,42,1),
+    18px 3px 0 0 rgba(0,0,0,1),
+    1px 4px 0 0 rgba(0,0,0,1),
+    2px 4px 0 0 rgba(33,233,42,1),
+    3px 4px 0 0 rgba(73,138,76,1),
+    4px 4px 0 0 rgba(0,0,0,1),
+    5px 4px 0 0 rgba(33,233,42,1),
+    8px 4px 0 0 rgba(33,233,42,1),
+    9px 4px 0 0 rgba(33,233,42,1),
+    10px 4px 0 0 rgba(33,233,42,1),
+    11px 4px 0 0 rgba(33,233,42,1),
+    12px 4px 0 0 rgba(0,0,0,1),
+    13px 4px 0 0 rgba(0,0,0,1),
+    14px 4px 0 0 rgba(0,0,0,1),
+    15px 4px 0 0 rgba(33,233,42,1),
+    16px 4px 0 0 rgba(33,233,42,1),
+    17px 4px 0 0 rgba(0,0,0,1),
+    18px 4px 0 0 rgba(33,233,42,1),
+    19px 4px 0 0 rgba(0,0,0,1),
+    1px 5px 0 0 rgba(0,0,0,1),
+    2px 5px 0 0 rgba(33,233,42,1),
+    3px 5px 0 0 rgba(0,0,0,1),
+    4px 5px 0 0 rgba(0,0,0,1),
+    5px 5px 0 0 rgba(33,233,42,1),
+    7px 5px 0 0 rgba(33,233,42,1),
+    8px 5px 0 0 rgba(33,233,42,1),
+    9px 5px 0 0 rgba(33,233,42,1),
+    10px 5px 0 0 rgba(0,0,0,1),
+    11px 5px 0 0 rgba(0,0,0,1),
+    13px 5px 0 0 rgba(0,0,0,1),
+    14px 5px 0 0 rgba(73,138,76,1),
+    15px 5px 0 0 rgba(33,233,42,1),
+    16px 5px 0 0 rgba(0,0,0,1),
+    17px 5px 0 0 rgba(0,0,0,1),
+    18px 5px 0 0 rgba(33,233,42,1),
+    19px 5px 0 0 rgba(0,0,0,1),
+    2px 6px 0 0 rgba(0,0,0,1),
+    4px 6px 0 0 rgba(0,0,0,1),
+    5px 6px 0 0 rgba(33,233,42,1),
+    6px 6px 0 0 rgba(33,233,42,1),
+    7px 6px 0 0 rgba(33,233,42,1),
+    8px 6px 0 0 rgba(33,233,42,1),
+    9px 6px 0 0 rgba(33,233,42,1),
+    11px 6px 0 0 rgba(0,0,0,1),
+    12px 6px 0 0 rgba(33,233,42,1),
+    13px 6px 0 0 rgba(33,233,42,1),
+    14px 6px 0 0 rgba(33,233,42,1),
+    15px 6px 0 0 rgba(33,233,42,1),
+    16px 6px 0 0 rgba(0,0,0,1),
+    17px 6px 0 0 rgba(0,0,0,1),
+    18px 6px 0 0 rgba(33,233,42,1),
+    19px 6px 0 0 rgba(0,0,0,1),
+    4px 7px 0 0 rgba(0,0,0,1),
+    5px 7px 0 0 rgba(33,233,42,1),
+    6px 7px 0 0 rgba(33,233,42,1),
+    7px 7px 0 0 rgba(33,233,42,1),
+    8px 7px 0 0 rgba(33,233,42,1),
+    9px 7px 0 0 rgba(33,233,42,1),
+    10px 7px 0 0 rgba(33,233,42,1),
+    11px 7px 0 0 rgba(33,233,42,1),
+    12px 7px 0 0 rgba(33,233,42,1),
+    13px 7px 0 0 rgba(33,233,42,1),
+    14px 7px 0 0 rgba(73,138,76,1),
+    15px 7px 0 0 rgba(33,233,42,1),
+    16px 7px 0 0 rgba(33,233,42,1),
+    17px 7px 0 0 rgba(0,0,0,1),
+    18px 7px 0 0 rgba(33,233,42,1),
+    19px 7px 0 0 rgba(0,0,0,1),
+    4px 8px 0 0 rgba(0,0,0,1),
+    5px 8px 0 0 rgba(73,138,76,1),
+    6px 8px 0 0 rgba(33,233,42,1),
+    7px 8px 0 0 rgba(33,233,42,1),
+    8px 8px 0 0 rgba(33,233,42,1),
+    9px 8px 0 0 rgba(33,233,42,1),
+    10px 8px 0 0 rgba(33,233,42,1),
+    11px 8px 0 0 rgba(33,233,42,1),
+    12px 8px 0 0 rgba(33,233,42,1),
+    13px 8px 0 0 rgba(73,138,76,1),
+    14px 8px 0 0 rgba(0,0,0,1),
+    15px 8px 0 0 rgba(0,0,0,1),
+    16px 8px 0 0 rgba(33,233,42,1),
+    17px 8px 0 0 rgba(33,233,42,1),
+    18px 8px 0 0 rgba(0,0,0,1),
+    5px 9px 0 0 rgba(0,0,0,1),
+    6px 9px 0 0 rgba(73,138,76,1),
+    7px 9px 0 0 rgba(33,233,42,1),
+    8px 9px 0 0 rgba(33,233,42,1),
+    9px 9px 0 0 rgba(33,233,42,1),
+    10px 9px 0 0 rgba(33,233,42,1),
+    11px 9px 0 0 rgba(33,233,42,1),
+    12px 9px 0 0 rgba(73,138,76,1),
+    13px 9px 0 0 rgba(0,0,0,1),
+    16px 9px 0 0 rgba(0,0,0,1),
+    17px 9px 0 0 rgba(0,0,0,1),
+    6px 10px 0 0 rgba(0,0,0,1),
+    7px 10px 0 0 rgba(73,138,76,1),
+    8px 10px 0 0 rgba(73,138,76,1),
+    9px 10px 0 0 rgba(73,138,76,1),
+    10px 10px 0 0 rgba(73,138,76,1),
+    11px 10px 0 0 rgba(73,138,76,1),
+    12px 10px 0 0 rgba(0,0,0,1),
+    7px 11px 0 0 rgba(0,0,0,1),
+    8px 11px 0 0 rgba(0,0,0,1),
+    9px 11px 0 0 rgba(0,0,0,1),
+    10px 11px 0 0 rgba(0,0,0,1),
+    11px 11px 0 0 rgba(0,0,0,1),
+    7px 12px 0 0 rgba(0,0,0,1),
+    8px 12px 0 0 rgba(73,138,76,1),
+    9px 12px 0 0 rgba(73,138,76,1),
+    10px 12px 0 0 rgba(73,138,76,1),
+    11px 12px 0 0 rgba(0,0,0,1),
+    4px 13px 0 0 rgba(0,0,0,1),
+    5px 13px 0 0 rgba(0,0,0,1),
+    6px 13px 0 0 rgba(0,0,0,1),
+    7px 13px 0 0 rgba(0,0,0,1),
+    8px 13px 0 0 rgba(73,138,76,1),
+    9px 13px 0 0 rgba(33,233,42,1),
+    10px 13px 0 0 rgba(0,0,0,1),
+    3px 14px 0 0 rgba(0,0,0,1),
+    4px 14px 0 0 rgba(73,138,76,1),
+    5px 14px 0 0 rgba(73,138,76,1),
+    6px 14px 0 0 rgba(73,138,76,1),
+    7px 14px 0 0 rgba(0,0,0,1),
+    8px 14px 0 0 rgba(33,233,42,1),
+    9px 14px 0 0 rgba(33,233,42,1),
+    10px 14px 0 0 rgba(0,0,0,1),
+    11px 14px 0 0 rgba(0,0,0,1),
+    12px 14px 0 0 rgba(0,0,0,1),
+    13px 14px 0 0 rgba(0,0,0,1),
+    3px 15px 0 0 rgba(0,0,0,1),
+    4px 15px 0 0 rgba(0,0,0,1),
+    5px 15px 0 0 rgba(0,0,0,1),
+    6px 15px 0 0 rgba(0,0,0,1),
+    7px 15px 0 0 rgba(0,0,0,1),
+    8px 15px 0 0 rgba(33,233,42,1),
+    9px 15px 0 0 rgba(33,233,42,1),
+    10px 15px 0 0 rgba(0,0,0,1),
+    11px 15px 0 0 rgba(73,138,76,1),
+    12px 15px 0 0 rgba(73,138,76,1),
+    13px 15px 0 0 rgba(73,138,76,1),
+    14px 15px 0 0 rgba(0,0,0,1),
+    2px 16px 0 0 rgba(0,0,0,1),
+    3px 16px 0 0 rgba(33,233,42,1),
+    4px 16px 0 0 rgba(33,233,42,1),
+    5px 16px 0 0 rgba(73,138,76,1),
+    6px 16px 0 0 rgba(73,138,76,1),
+    7px 16px 0 0 rgba(0,0,0,1),
+    8px 16px 0 0 rgba(33,233,42,1),
+    9px 16px 0 0 rgba(73,138,76,1),
+    10px 16px 0 0 rgba(73,138,76,1),
+    11px 16px 0 0 rgba(33,233,42,1),
+    12px 16px 0 0 rgba(33,233,42,1),
+    13px 16px 0 0 rgba(33,233,42,1),
+    14px 16px 0 0 rgba(33,233,42,1),
+    15px 16px 0 0 rgba(0,0,0,1),
+    1px 17px 0 0 rgba(0,0,0,1),
+    2px 17px 0 0 rgba(33,233,42,1),
+    3px 17px 0 0 rgba(33,233,42,1),
+    4px 17px 0 0 rgba(33,233,42,1),
+    5px 17px 0 0 rgba(33,233,42,1),
+    6px 17px 0 0 rgba(73,138,76,1),
+    7px 17px 0 0 rgba(73,138,76,1),
+    8px 17px 0 0 rgba(0,0,0,1),
+    9px 17px 0 0 rgba(73,138,76,1),
+    10px 17px 0 0 rgba(33,233,42,1),
+    11px 17px 0 0 rgba(33,233,42,1),
+    12px 17px 0 0 rgba(33,233,42,1),
+    13px 17px 0 0 rgba(33,233,42,1),
+    14px 17px 0 0 rgba(33,233,42,1),
+    15px 17px 0 0 rgba(33,233,42,1),
+    16px 17px 0 0 rgba(0,0,0,1),
+    1px 18px 0 0 rgba(0,0,0,1),
+    2px 18px 0 0 rgba(33,233,42,1),
+    3px 18px 0 0 rgba(0,0,0,1),
+    4px 18px 0 0 rgba(33,233,42,1),
+    5px 18px 0 0 rgba(33,233,42,1),
+    6px 18px 0 0 rgba(33,233,42,1),
+    7px 18px 0 0 rgba(73,138,76,1),
+    8px 18px 0 0 rgba(73,138,76,1),
+    9px 18px 0 0 rgba(33,233,42,1),
+    10px 18px 0 0 rgba(33,233,42,1),
+    11px 18px 0 0 rgba(33,233,42,1),
+    12px 18px 0 0 rgba(33,233,42,1),
+    13px 18px 0 0 rgba(0,0,0,1),
+    14px 18px 0 0 rgba(0,0,0,1),
+    15px 18px 0 0 rgba(33,233,42,1),
+    16px 18px 0 0 rgba(0,0,0,1),
+    2px 19px 0 0 rgba(0,0,0,1),
+    4px 19px 0 0 rgba(0,0,0,1),
+    5px 19px 0 0 rgba(33,233,42,1),
+    6px 19px 0 0 rgba(33,233,42,1),
+    7px 19px 0 0 rgba(33,233,42,1),
+    8px 19px 0 0 rgba(33,233,42,1),
+    9px 19px 0 0 rgba(33,233,42,1),
+    10px 19px 0 0 rgba(33,233,42,1),
+    11px 19px 0 0 rgba(33,233,42,1),
+    12px 19px 0 0 rgba(0,0,0,1),
+    15px 19px 0 0 rgba(0,0,0,1),
+    5px 20px 0 0 rgba(0,0,0,1),
+    6px 20px 0 0 rgba(0,0,0,1),
+    7px 20px 0 0 rgba(33,233,42,1),
+    8px 20px 0 0 rgba(33,233,42,1),
+    9px 20px 0 0 rgba(33,233,42,1),
+    10px 20px 0 0 rgba(33,233,42,1),
+    11px 20px 0 0 rgba(0,0,0,1),
+    7px 21px 0 0 rgba(0,0,0,1),
+    8px 21px 0 0 rgba(0,0,0,1),
+    9px 21px 0 0 rgba(0,0,0,1),
+    10px 21px 0 0 rgba(0,0,0,1);
+}
+.object.zombie .sprite{
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+
+  background: url("zombie.png") center / contain no-repeat;
+  image-rendering: auto;
+  transform: none;
+  transform-origin: center;
+  animation: zombieBob 0.9s ease-in-out infinite;
+  filter: drop-shadow(0 6px 6px rgba(0,0,0,0.25));
+}
+@keyframes zombieBob{
+  0%   { transform: translateY(0); }
+  50%  { transform: translateY(-3px); }
+  100% { transform: translateY(0); }
+}
